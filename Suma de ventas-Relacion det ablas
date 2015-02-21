@@ -1,0 +1,70 @@
+TABLA SUCURSAL
+
+set serveroutput on;
+declare
+cursor ventas is select id_cliente, venta from sucursal ;
+id_vigente integer;
+venta_acumulada integer;
+begin
+for Y in ventas loop
+id_vigente:=Y.id_cliente;
+SELECT SUM(VENTA) INTO VENTA_ACUMULADA FROM SUCURSAL WHERE ID_CLIENTE LIKE ID_VIGENTE;
+dbms_output.put_line(id_vigente || ' ' ||venta_acumulada);
+end loop;
+end;
+/
+
+
+
+//////////////////////////TABLAS RELACIONADAS
+
+
+Select empleado_ventas.nombre_cliente,empleado_ventas.ID_CLIENTE,sucursal.ID_CLIENTE from empleado_ventas  
+join sucursal on empleado_ventas.id_cliente=sucursal.id_cliente;
+
+set serveroutput on;
+declare
+cursor ventas is Select empleado_ventas.nombre_cliente,EMPLEADO_VENTAS.id_cliente,sucursal.venta from empleado_ventas  join sucursal on empleado_ventas.id_cliente=sucursal.id_cliente;
+id_vigente integer;
+venta_acumulada integer;
+NOM VARCHAR2(120);
+begin
+for Y in ventas loop
+id_vigente:=Y.id_cliente;
+--NOM:=
+SELECT SUM(VENTA) INTO VENTA_ACUMULADA FROM SUCURSAL WHERE ID_CLIENTE LIKE ID_VIGENTE;
+dbms_output.put_line(Y.nombre_cliente || '     ' || VENTA_ACUMULADA);
+end loop;
+end;
+/
+
+
+
+
+//////////////////////////////////////
+
+
+set serveroutput on;
+declare
+id_actual integer;
+total_actual integer;
+nombre_actual varchar2(120);
+cursor cur Is select id_cliente, venta from sucursal order by id_cliente;
+begin
+id_actual:=1;
+total_actual:=0;
+select nombre_cliente into nombre_actual from empleado_ventas where id_cliente=id_actual;
+for fila in cur loop
+if id_actual=fila.id_cliente then
+total_actual:=total_actual+fila.venta;
+else
+
+dbms_output.put_line('nombre '||nombre_actual ||'suma total:'||total_actual);
+id_actual:=fila.id_cliente;
+total_actual:=fila.venta;
+select nombre_cliente into nombre_actual from empleado_ventas where id_cliente=id_actual;
+end if;
+end loop;
+dbms_output.put_line('nombre '||nombre_actual ||'suma total:'||total_actual);
+end;
+/
