@@ -1,0 +1,62 @@
+--CREACION DE LA TABLA
+
+CREATE TABLE libroz (
+bookz_id INTEGER, CONSTRAINT PK_ID_BOOK PRIMARY KEY (BOOK_ID),isbn VARCHAR2(13),titulo VARCHAR2(200),
+resumen VARCHAR2(2000),autor VARCHAR2(200), fecha_publiccion DATE, num_pag NUMBER);
+
+**********************************************************
+
+--CREACION DE LA SECUENCIA
+
+CREATE SEQUENCE SEC_BOOK
+START WITH 1
+INCREMENT BY 1
+NOMAXVALUE;
+
+**********************************************************
+
+--CREACION DEL PROCEDIMIENTO
+
+CREATE OR REPLACE PROCEDURE ALMACENADO_BOOK(MY_BOOKZ_ID OUT INTEGER, MY_ISBN IN VARCHAR2, MY_TITULO IN VARCHAR2, MY_RESUMEN IN VARCHAR2, MY_AUTOR IN VARCHAR, MY_fecha_publicacion IN DATE, MY_NUM_PAG IN NUMBER)
+AS
+  BEGIN
+
+  SELECT SEC_BOOK.NEXTVAL INTO MY_BOOKZ_ID FROM DUAL;
+  INSERT INTO LIBROZ(BOOKZ_ID, ISBN, TITULO, RESUMEN, AUTOR, fecha_publicacion, NUM_PAG) VALUES(MY_BOOKZ_ID, MY_ISBN, MY_TITULO, MY_RESUMEN, MY_AUTOR, MY_fecha_publicacion, MY_NUM_PAG);
+END;
+/
+
+**********************************************************
+
+--CREACION DE REGISTROS
+
+
+SET SERVEROUTPUT ON;
+DECLARE
+ID_AUTO INTEGER;
+BEGIN
+ALMACENADO_BOOK(ID_AUTO,'9876073108652','Tormenta de Espadas','La espada llameante dejó a su paso largas estelas de fuego...el acero cantó contra el acero','GeorgeR.R Martin',
+to_date('2012/06/12','YYYY/MM/DD'),1172);
+END;
+ 
+SET SERVEROUTPUT ON;
+DECLARE
+ID_AUTO INTEGER;
+BEGIN
+ALMACENADO_BOOK(ID_AUTO,'9786073108409','Choque de Reyes','Cuando los reyes están en guerra, toda la tierra tiembla','GeorgeR.R Martin',
+to_date('2014/10/22','YYYY/MM/DD'),925);
+END;
+ 
+SET SERVEROUTPUT ON;
+DECLARE
+ID_AUTO INTEGER;
+BEGIN
+ALMACENADO_BOOK(ID_AUTO,'9786073113113','Juego de Tronos','Se acerca el invierno-Casa Stark','GeorgeR.R Martin',
+to_date('2014/09/29','YYYY/MM/DD'),795);
+END;
+ 
+**************************************************************
+
+SELECCION DE LIBROS
+
+SELECT BOOKZ_ID, 'LA FECHA DE PUBLICACION DEL LIBRO ' || TITULO || ' FUE EL  ' || TO_CHAR(fecha_publicacion, 'DD/YYYY/MM') FROM LIBROZ;
