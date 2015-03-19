@@ -1,0 +1,30 @@
+
+--CREACION DE TABLAS
+
+create table sitios_yyy(id_xxx Integer,edad Integer);
+create table peques_yyy(id_xxx Integer,edad Integer);
+create table adultos_yyy(id_xxx Integer,edad Integer);
+--CREACION DE TRIGGER
+
+Create or replace trigger reto before insert on sitios_yyy
+for each row
+begin
+
+if :NEW.edad>18 then
+
+insert into adultos_yyy VALUES(:NEW.id_xxx,:NEW.edad);
+
+ELSE
+insert into peques_yyy VALUES(:NEW.id_xxx,:NEW.edad);
+END IF;
+end;
+
+--INSERTAR DATOS Y COMPROBAR
+
+insert into sitios_yyy (id_xxx,edad)values (1,20);
+
+insert into sitios_yyy (id_xxx,edad)values (2,11);
+
+select * from adultos_YYY;
+
+select * from peques_YYY;
